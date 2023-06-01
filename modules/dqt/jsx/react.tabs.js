@@ -7,10 +7,13 @@
  *  @license  http://www.gnu.org/licenses/gpl-3.0.txt GPLv3
  *  @link     https://github.com/mohadesz/Loris-Trunk
  */
+/* eslint-disable */
 
 import React, {Component, useState} from 'react';
 import PropTypes from 'prop-types';
 import StaticDataTable from '../../../jsx/StaticDataTable';
+import swal from 'sweetalert2';
+
 const {jStat} = require('jstat');
 
 /**
@@ -1121,6 +1124,7 @@ class ManageSavedQueryFilter extends Component {
  * The following component is used for displaying the individual saved queries in the
  * manage saved queries tab
  */
+
 class ManageSavedQueryRow extends Component {
   /**
    * @constructor
@@ -1129,6 +1133,36 @@ class ManageSavedQueryRow extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
+
+   /**
+   * @deleteclick
+   */
+   deleteclick() {
+          let id = this.props.Query['_id'];
+          swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+           }).then((result) => {
+           if (result.value) {
+            let deleteurl = loris.BaseURL +
+              '/AjaxHelper.php?Module=dqt&script=DeleteDoc.php&DocID='
+              + encodeURIComponent(id);
+              fetch(deleteurl, {
+              cache: 'no-cache',
+              credentials: 'same-origin',
+              }).then((resp) => resp.json())
+                .then(()=>{
+                  location.reload();
+                  swal.fire('delete Successful!', '', 'success');
+                });
+           }
+          });
   }
 
   /**
@@ -1238,6 +1272,18 @@ class ManageSavedQueryRow extends Component {
             {filters}
           </div>
         </td>
+        <td>
+          <div className={'tableNamesCell'}>
+           <button className='btn btn-danger'
+             onClick={()=> { // eslint-disable-line
+                      this.deleteclick(); // eslint-disable-line
+                           } // eslint-disable-line
+	     } // eslint-disable-line
+           >
+            delete
+          </button>
+          </div>
+        </td>
       </tr>
     );
   }
@@ -1310,8 +1356,9 @@ let ManageSavedQueriesTabPane = (props) => {
           <th>Query Name</th>
           <th>Fields</th>
           <th>Filters</th>
+	  <th>Delete</th>
         </tr>
-        </thead>
+	</thead>
         <tbody>
         {queryRows}
         </tbody>

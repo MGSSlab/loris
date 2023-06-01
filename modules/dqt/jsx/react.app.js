@@ -8,6 +8,7 @@
  *  @license  http://www.gnu.org/licenses/gpl-3.0.txt GPLv3
  *  @link     https://github.com/mohadesz/Loris-Trunk
  */
+/* eslint-disable */
 
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
@@ -41,6 +42,7 @@ class DataQueryApp extends Component {
       queryIDs: {
         user: [],
         shared: [],
+	author: [],
       },
       savedQueries: {},
       queriesLoaded: false,
@@ -1327,6 +1329,7 @@ class DataQueryApp extends Component {
                         savePrompt={this.state.savePrompt}
                       />
                       <SavedQueriesList
+		        author={this.state.queryIDs.author}
                         userQueries={this.state.queryIDs.user}
                         globalQueries={this.state.queryIDs.shared}
                         queryDetails={this.state.savedQueries}
